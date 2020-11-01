@@ -1,17 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>CodePen - A Pen by Keerthivasan.N</title>
-  <link rel="stylesheet" href="src/style.css">
-  <link rel="stylesheet" href="./style.css">
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Inventory</title>
+    <link rel="stylesheet" href="src/styles/style.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"
+        id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="scripts/main.js"></script>
 </head>
-<body>
+
 <!-- partial:index.partial.html -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
 <body>
     <div id="login">
         <h3 class="text-center text-white pt-5">Login</h3>
@@ -19,7 +21,7 @@
             <div id="login-row" class="row justify-content-center align-items-center">
                 <div id="login-column" class="col-md-6">
                     <div id="login-box" class="col-md-12">
-                        <form id="login-form" class="form" action="" method="post">
+                        <form id="login-form" class="form" action="" method="post" onsubmit="login()">
                             <h3 class="text-center text-info">Login</h3>
                             <div class="form-group">
                                 <label for="username" class="text-info">Username:</label><br>
@@ -39,6 +41,7 @@
         </div>
     </div>
 </body>
-  
+
 </body>
+
 </html>
