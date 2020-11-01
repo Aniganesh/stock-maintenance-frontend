@@ -1,0 +1,10 @@
+.full-height-flex {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dashboard-item{
+    margin: 1rem
+}

@@ -1,15 +1,30 @@
 <!DOCTYPE html>
-<body>
-  <link rel="stylesheet" href="style/dashboard.css">
-  <script src="scripts/dashboard.js" defer></script>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"
-        id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-  <title>DASHBOARD</title>
-</body>
 <html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Manage inventory</title>
+
+  <link rel="stylesheet" href="styles/dashboard.css">
+  <link rel="stylesheet" href="styles/BootstrapResets.css">
+
+  <script src="scripts/dashboard.js" defer></script>
+  <script src="scripts/main.js"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"
+    id="bootstrap-css">
+  <link rel="stylesheet" href="styles/style.css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <title>DASHBOARD</title>
+</head>
+
+<body>
   <div id="root">
 
   </div>
+  <script>
+    document.querySelector("#root").appendChild(getHeader('STOCK MAINTENANCE SYSTEM'))
+  </script>
 </body>
+
 </html>

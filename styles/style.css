@@ -1,0 +1,31 @@
+:root {
+  --theme-primary: #1ecbe1;
+  --theme-primary-text: #333;
+}
+
+#login .container #login-row #login-column #login-box {
+  margin-top: 120px;
+  max-width: 600px;
+  height: 320px;
+  border: 1px solid #9C9C9C;
+  background-color: #EAEAEA;
+}
+
+#login .container #login-row #login-column #login-box #login-form {
+  padding: 20px;
+}
+
+.theme-primary-bg {
+  background: var(--theme-primary, #1ecbe1);
+  color: var(--theme-primary-text, #333)
+}
+
+.theme-primary {
+  color: var(--theme-primary, #1ecbe1);
+}
+
+a, a:hover {
+  text-decoration: none;
+  color: initial;
+}
+
