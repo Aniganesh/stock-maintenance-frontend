@@ -1,10 +1,15 @@
 .full-height-flex {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.dashboard-item{
-    margin: 1rem
+.dashboard-item {
+    margin: 1rem;
+    cursor: pointer
+}
+
+.dashboard-container {
+    flex-direction: column;
 }

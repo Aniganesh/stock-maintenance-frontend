@@ -4,7 +4,7 @@
 const getHeader = (title) => {
 	const header = createDiv();
 	header.classList.add('navbar')
-	header.classList.add('theme-primary-bg')
+	header.classList.add('bg-theme')
 	const titleComp = document.createElement('div')
 	titleComp.classList.add('h4')
 	titleComp.innerText = title
