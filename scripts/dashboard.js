@@ -72,7 +72,7 @@ const toggleUpdateStock = (formArea) => {
     </select>
     <input type="number" class="form-control" name="item-price" placeholder="Price of Item" required /><br />
     <input type="number" class="form-control" name="item-units" placeholder="Number of units received" required /> <br />
-    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-stock-button">Add</button>
+    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="update-stock-button">Add</button>
 </form>`, 'Update a stock item', true)
     const stockSelect = card.querySelector('#stock-to-update')
     /* TODO: Get stocks from back-end and append them to stockSelect. Also populate item price and item units  */
@@ -89,10 +89,9 @@ const toggleTagStock = (formArea) => {
         <option selected disabled value="----">--Select a tag for stock--</option>
     </select><br />
     
-    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-stock-button">Add</button>
-</form>`, 'Update a stock item', true)
+    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="tag-stock-button">Add</button>
+</form>`, 'Tag a stock item', true)
     manageCards(formId, card, formArea)
-
 }
 
 const manageCards = (formId, card, formArea) => {
@@ -103,6 +102,21 @@ const manageCards = (formId, card, formArea) => {
     }
     card.classList.add('action-card')
     formArea.appendChild(card)
+}
+
+const toggleAllotSpace = (formArea) => {
+    const formId = 'allot-space-form'
+    const card = createCard(`<form class="form-group" id="${formId}" action="" method="">
+    <select name="stock" class="custom-select" id="stock-to-allot" required>
+        <option selected disabled value="----">--Select a stock to allot space for--</option>
+    </select><br />
+    <select name="space" class="custom-select" id="space-for-stock" required>
+        <option selected disabled value="----">--Select a tag for stock--</option>
+    </select><br />
+    
+    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="allot-space-button">Add</button>
+</form>`, 'Allot space for a stock', true)
+    manageCards(formId, card, formArea)
 }
 
 const getDashboard = (options) => {
@@ -123,9 +137,10 @@ const getDashboard = (options) => {
     const formArea = div()
     formArea.setAttribute('id', 'form-area')
     dashboard.appendChild(formArea)
-    return { dashboard, formArea }
+    return dashboard
 
 }
+
 const createCard = (content, title, isContentHTML) => {
     const card = div()
     card.classList.add('card')
@@ -158,5 +173,5 @@ const options = [
     { title: `View all stocks`, content: ``, component: `viewAllStocks` },
     { title: 'Add tag', content: '', component: 'addTag' }
 ]
-const { formArea, dashboard } = getDashboard(options)
+const dashboard = getDashboard(options)
 root.appendChild(dashboard)
