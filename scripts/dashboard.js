@@ -1,3 +1,5 @@
+"use strict"
+
 const dashboard = (options) => {
     const dashboard = div()
     dashboard.classList.add('full-height-flex')

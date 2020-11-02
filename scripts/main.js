@@ -1,4 +1,5 @@
-const token = sessionStorage.getItem('access-token')
+"use strict"
+
 
 const getHeader = (title) => {
 	const header = createDiv();
@@ -13,4 +14,7 @@ const getHeader = (title) => {
 
 const createDiv = () => {
 	return document.createElement('div')
+}
+if ((!sessionStorage.getItem('token')) && (window.location.pathname.indexOf('index.html') === -1)) {
+	window.location.replace('file:///home/aniruddha/Learning%20progress/IDP/stock-maintenance-frontend/index.html')
 }
