@@ -88,6 +88,25 @@ const toggleUpdateStock = () => {
     formArea.appendChild(card)
 }
 
+const toggleTagStock = () => {
+    const tagStockForm = formArea.querySelector('#tag-stock-form')
+    if (tagStockForm) {
+        formArea.removeChild(tagStockForm.parentNode.parentNode.parentNode)
+        return
+    }
+    const card = createCard(`<form class="form-group" id="tag-stock-form" action="" method="">
+    <select name="stock" class="custom-select" id="stock-to-tag" required>
+        <option selected disabled value="----">--Select a stock to update--</option>
+    </select><br />
+    <select name="tag" class="custom-select" id="tag-for-stock" required>
+        <option selected disabled value="----">--Select a tag for stock--</option>
+    </select><br />
+    
+    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-stock-button">Add</button>
+</form>`, 'Update a stock item', true)
+    formArea.appendChild(card)
+
+}
 
 const getDashboard = (options) => {
     const dashboard = div()

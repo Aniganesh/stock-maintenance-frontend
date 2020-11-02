@@ -13,3 +13,8 @@
 .dashboard-container {
     flex-direction: column;
 }
+
+#form-area {
+    display: flex;
+    justify-content: center;
+}
