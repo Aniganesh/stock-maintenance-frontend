@@ -18,3 +18,13 @@ const createDiv = () => {
 if ((!sessionStorage.getItem('token')) && (window.location.pathname.indexOf('index.html') === -1)) {
 	window.location.replace('file:///home/aniruddha/Learning%20progress/IDP/stock-maintenance-frontend/index.html')
 }
+
+const getXHR = () => {
+	let XHR
+	if (window.XMLHttpRequest) {
+		XHR = new XMLHttpRequest();
+	} else if (window.ActiveXObject) {
+		XHR = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	return XHR
+}

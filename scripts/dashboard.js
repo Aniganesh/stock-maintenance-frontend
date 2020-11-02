@@ -94,8 +94,8 @@ const toggleTagStock = (formArea) => {
     manageCards(formId, card, formArea)
 }
 
-const manageCards = (formId, card, formArea) => {
-    const form = formArea.querySelector(`#${formId}`)
+const manageCards = (cardId, card, formArea) => {
+    const form = formArea.querySelector(`#${cardId}`)
     if (form) {
         formArea.removeChild(form.parentNode.parentNode.parentNode)
         return
@@ -116,8 +116,20 @@ const toggleAllotSpace = (formArea) => {
     
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="allot-space-button">Add</button>
 </form>`, 'Allot space for a stock', true)
+    const stockSelect = card.querySelector('#stock-to-allot')
+    const spaceSelect = card.querySelector('#space-for-stock')
+    /* TODO: Get stocks from back-end and append them to stockSelect. Similarly with spaceSelect  */
     manageCards(formId, card, formArea)
 }
+
+const toggleViewAllStocks = (formArea) => {
+    const cardId = 'stock-list'
+    const card = createCard(`<div id="${cardId}"></div>`, "All stocks", true)
+    const stocksContainer = card.querySelector(`#${cardId}`)
+    /* TODO: Get stocks from back-end and append them to a ul in stocksContainer */
+    manageCards(cardId, card, formArea)
+}
+
 
 const getDashboard = (options) => {
     const dashboard = div()
@@ -138,7 +150,6 @@ const getDashboard = (options) => {
     formArea.setAttribute('id', 'form-area')
     dashboard.appendChild(formArea)
     return dashboard
-
 }
 
 const createCard = (content, title, isContentHTML) => {

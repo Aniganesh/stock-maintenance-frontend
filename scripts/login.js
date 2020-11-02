@@ -26,6 +26,7 @@ const login = (event) => {
 	event.preventDefault()
 	const username = event.target.username.value
 	const password = event.target.password.value
+	const XHR = getXHR()
 	// const requestSuccess = await 
 	console.log({ username, password })
 	if (username.toLowerCase() === 'admin' && password === 'stock12345') {
@@ -36,13 +37,3 @@ const login = (event) => {
 
 const loginForm = document.querySelector('#login-form')
 loginForm.addEventListener('submit', login)
-
-const getXHR = () => {
-	let XHR
-	if (window.XMLHttpRequest) {
-		XHR = new XMLHttpRequest();
-	} else if (window.ActiveXObject) {
-		XHR = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	return XHR
-}
