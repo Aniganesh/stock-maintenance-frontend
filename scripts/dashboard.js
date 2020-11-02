@@ -89,7 +89,7 @@ const toggleTagStock = (formArea) => {
         <option selected disabled value="----">--Select a tag for stock--</option>
     </select><br />
     
-    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="tag-stock-button">Add</button>
+    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="tag-stock-button">Tag</button>
 </form>`, 'Tag a stock item', true)
     manageCards(formId, card, formArea)
 }
@@ -114,7 +114,7 @@ const toggleAllotSpace = (formArea) => {
         <option selected disabled value="----">--Select a tag for stock--</option>
     </select><br />
     
-    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="allot-space-button">Add</button>
+    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="allot-space-button">Allot</button>
 </form>`, 'Allot space for a stock', true)
     const stockSelect = card.querySelector('#stock-to-allot')
     const spaceSelect = card.querySelector('#space-for-stock')
@@ -130,6 +130,14 @@ const toggleViewAllStocks = (formArea) => {
     manageCards(cardId, card, formArea)
 }
 
+const toggleAddTag = (formArea) => {
+    const cardId = 'add-tag-form'
+    const card = createCard(`<form class="form-group" id="${cardId}" action="" method=""> 
+    <input type="text" class="form-control" id="add-tag-input" name="tag" placeholder="Name of tag" required />
+    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-tag-button">Add</button>
+    </form>`, "Add tag", true)
+    manageCards(cardId, card, formArea)
+}
 
 const getDashboard = (options) => {
     const dashboard = div()
