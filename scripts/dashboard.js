@@ -53,20 +53,41 @@ const displayForm = (event) => {
 }
 
 const toggleAddStock = (formArea) => {
-    const addStockForm = formArea.querySelector('#add-stock')
+    const addStockForm = formArea.querySelector('#add-stock-form')
     if (addStockForm) {
         formArea.removeChild(addStockForm.parentNode.parentNode.parentNode)
         return
     }
-    const card = createCard(`<form class="form-group" id="add-stock" action="" method="">
+    const card = createCard(`<form class="form-group" id="add-stock-form" action="" method="">
     <input type="text" class="form-control" name="item-name" placeholder="Name of item" required /><br />
     <input type="number" class="form-control" name="item-price" placeholder="Price of Item" required /><br />
     <input type="number" class="form-control" name="item-units" placeholder="Number of units received" required /> <br />
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-stock-button">Add</button>
 </form>`, 'Add a stock item', true)
     formArea.appendChild(card)
-    
+
 }
+
+const toggleUpdateStock = () => {
+    const updateStockForm = formArea.querySelector('#update-stock-form')
+    if (updateStockForm) {
+        formArea.removeChild(updateStockForm.parentNode.parentNode.parentNode)
+        return
+    }
+    const card = createCard(`<form class="form-group" id="add-stock-form" action="" method="">
+    <select name="stock" class="custom-select" id="stock-to-update" required>
+        <option selected disabled value="----">--Select a stock to update--</option>
+    </select>
+    <input type="number" class="form-control" name="item-price" placeholder="Price of Item" required /><br />
+    <input type="number" class="form-control" name="item-units" placeholder="Number of units received" required /> <br />
+    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-stock-button">Add</button>
+</form>`, 'Update a stock item', true)
+    const stockSelect = card.querySelector('#stock-to-update')
+    /* TODO: Get stocks from back-end and append them to stockSelect. Also populate item price and item units  */
+
+    formArea.appendChild(card)
+}
+
 
 const getDashboard = (options) => {
     const dashboard = div()
@@ -114,7 +135,7 @@ const div = () => {
 const root = document.querySelector('#root')
 
 const options = [
-    { title: 'Add stock', content: ``, component: `addStock` },
+    { title: 'Add new stock', content: ``, component: `addStock` },
     { title: `Update stock`, content: ``, component: `updateStock` },
     { title: `Tag stock`, content: ``, component: `tagStock` },
     { title: `Allot space`, content: ``, component: `allotSpace` },
