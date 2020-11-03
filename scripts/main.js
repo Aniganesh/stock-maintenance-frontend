@@ -9,6 +9,7 @@ const getHeader = (title) => {
 	titleComp.classList.add('h4')
 	titleComp.innerText = title
 	header.appendChild(titleComp)
+	/* TODO: Get user's name and display it along with a log out button */
 	return header
 }
 
@@ -16,7 +17,9 @@ const createDiv = () => {
 	return document.createElement('div')
 }
 if ((!sessionStorage.getItem('token')) && (window.location.pathname.indexOf('index.html') === -1)) {
-	window.location.replace('file:///home/aniruddha/Learning%20progress/IDP/stock-maintenance-frontend/index.html')
+	const pathSplit = window.location.pathname.split('/')
+	const newPath = pathSplit.slice(0, pathSplit.length - 1).join('/') + '/index.html'
+	window.location.replace(newPath)
 }
 
 const getXHR = () => {
