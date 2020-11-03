@@ -31,7 +31,9 @@ const login = (event) => {
 	console.log({ username, password })
 	if (username.toLowerCase() === 'admin' && password === 'stock12345') {
 		sessionStorage.setItem('token', Math.random())
-		window.location.href = "file:///home/aniruddha/Learning%20progress/IDP/stock-maintenance-frontend/dashboard.html";
+		const pathSplit = window.location.pathname.split('/')
+		const newPath = pathSplit.slice(0, pathSplit.length - 1).join('/') + '/dashboard.html'
+		window.location.href = newPath;
 	}
 }
 
