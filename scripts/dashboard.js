@@ -1,5 +1,7 @@
 "use strict"
 
+const XHR = getXHR()
+
 const isDashItem = (item) => {
     if (item.classList.contains('dashboard-item') ||
         item.parentNode.classList.contains('dashboard-item') ||
@@ -54,14 +56,33 @@ const displayForm = (event) => {
 
 const toggleAddStock = (formArea) => {
     const formId = 'add-stock-form'
-    const card = createCard(`<form class="form-group" id="${formId}" action="" method="">
-    <input type="text" class="form-control" name="item-name" placeholder="Name of item" required /><br />
-    <input type="number" class="form-control" name="item-price" placeholder="Price of Item" required /><br />
-    <input type="number" class="form-control" name="item-units" placeholder="Number of units received" required /> <br />
+    const card = createCard(`<form class="form-group" id="${formId}">
+    <input type="text" class="form-control" name="name" placeholder="Name of item" required /><br />
+    <input type="number" class="form-control" name="price" placeholder="Price of Item" required /><br />
+    <input type="number" class="form-control" name="unitsAvailable" placeholder="Number of units received" required /> <br />
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-stock-button">Add</button>
 </form>`, 'Add a stock item', true)
     manageCards(formId, card, formArea)
+    document.querySelector(`#${formId}`).addEventListener('submit', addStock)
+}
 
+const addStock = (event) => {
+    event.preventDefault()
+    const name = event.target.name.value, price = event.target.price.value, unitsAvailable = event.target.unitsAvailable.value
+    $.ajax({
+        url: 'http://localhost:5000/stocks',
+        type: "POST",
+        data: { name, price, unitsAvailable },
+        dataType: "json",
+        beforeSend: function (x) {
+            if (x && x.overrideMimeType) {
+                x.overrideMimeType("application/j-son;charset=UTF-8");
+            }
+        },
+        success: function (result) {
+            console.log("Added value", result)
+        }
+    });
 }
 
 const toggleUpdateStock = (formArea) => {
