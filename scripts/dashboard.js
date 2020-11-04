@@ -1,6 +1,19 @@
 "use strict"
 
-const XHR = getXHR()
+const ajaxCall = (endPoint, data, method, onSuccess) => {
+    $.ajax({
+        url: `http://localhost:5000/${endPoint}`,
+        type: method,
+        data,
+        dataType: "json",
+        beforeSend: function (x) {
+            if (x && x.overrideMimeType) {
+                x.overrideMimeType("application/j-son;charset=UTF-8");
+            }
+        },
+        success: onSuccess
+    });
+}
 
 const isDashItem = (item) => {
     if (item.classList.contains('dashboard-item') ||
@@ -50,6 +63,9 @@ const displayForm = (event) => {
             case 'addTag':
                 toggleAddTag(formArea)
                 break
+            case 'viewTags':
+                toggleViewTags(formArea)
+                break
         }
     }
 }
@@ -62,27 +78,26 @@ const toggleAddStock = (formArea) => {
     <input type="number" class="form-control" name="unitsAvailable" placeholder="Number of units received" required /> <br />
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-stock-button">Add</button>
 </form>`, 'Add a stock item', true)
-    manageCards(formId, card, formArea)
-    document.querySelector(`#${formId}`).addEventListener('submit', addStock)
+    manageCards(formId, card, formArea, addStock)
+
 }
 
-const addStock = (event) => {
-    event.preventDefault()
-    const name = event.target.name.value, price = event.target.price.value, unitsAvailable = event.target.unitsAvailable.value
-    $.ajax({
-        url: 'http://localhost:5000/stocks',
-        type: "POST",
-        data: { name, price, unitsAvailable },
-        dataType: "json",
-        beforeSend: function (x) {
-            if (x && x.overrideMimeType) {
-                x.overrideMimeType("application/j-son;charset=UTF-8");
-            }
-        },
-        success: function (result) {
-            console.log("Added value", result)
-        }
-    });
+/* Card togglers */
+
+const toggleViewTags = (formArea) => {
+    const cardId = 'tag-list'
+    const card = createCard(`<div class="entity-list" id="${cardId}"></div>`, "All Tags", true)
+    const onSuccess = (res) => {
+        res.map((tag, index) => {
+            const tagDiv = div()
+            tagDiv.classList.add("entity")
+            tagDiv.innerHTML = `<div>${tag.name}</div><button class="delete-icon" id='tag${index}' >x</button>`
+            tagDiv.querySelector(`#tag${index}`).addEventListener('click', () => deleteTag(tag._id))
+            card.querySelector(`#${cardId}`).appendChild(tagDiv)
+        })
+    }
+    ajaxCall('tags', {}, 'GET', onSuccess)
+    manageCards(cardId, card, formArea)
 }
 
 const toggleUpdateStock = (formArea) => {
@@ -96,6 +111,8 @@ const toggleUpdateStock = (formArea) => {
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="update-stock-button">Add</button>
 </form>`, 'Update a stock item', true)
     const stockSelect = card.querySelector('#stock-to-update')
+    const stockPrice = card.querySelector('#item-price')
+    const stockUnits = card.querySelector('#item-units')
     /* TODO: Get stocks from back-end and append them to stockSelect. Also populate item price and item units  */
     manageCards(formId, card, formArea)
 }
@@ -113,16 +130,6 @@ const toggleTagStock = (formArea) => {
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="tag-stock-button">Tag</button>
 </form>`, 'Tag a stock item', true)
     manageCards(formId, card, formArea)
-}
-
-const manageCards = (cardId, card, formArea) => {
-    const form = formArea.querySelector(`#${cardId}`)
-    if (form) {
-        formArea.removeChild(form.parentNode.parentNode.parentNode)
-        return
-    }
-    card.classList.add('action-card')
-    formArea.appendChild(card)
 }
 
 const toggleAllotSpace = (formArea) => {
@@ -145,9 +152,17 @@ const toggleAllotSpace = (formArea) => {
 
 const toggleViewAllStocks = (formArea) => {
     const cardId = 'stock-list'
-    const card = createCard(`<div id="${cardId}"></div>`, "All stocks", true)
-    const stocksContainer = card.querySelector(`#${cardId}`)
-    /* TODO: Get stocks from back-end and append them to a ul in stocksContainer */
+    const card = createCard(`<div class="entity-list" id="${cardId}"></div>`, "All stocks", true)
+    const onSuccess = (res) => {
+        res.map((stock, index) => {
+            const stockDiv = div()
+            stockDiv.classList.add("entity")
+            stockDiv.innerHTML = `<div>${stock.name}</div>(${stock.unitsAvailable} units) <button class="delete-icon" id="stock${index}">x</button>`
+            stockDiv.querySelector(`#stock${index}`).addEventListener('click', () => deleteStock(stock._id))
+            card.querySelector(`#${cardId}`).appendChild(stockDiv)
+        })
+    }
+    ajaxCall('stocks', {}, 'GET', onSuccess)
     manageCards(cardId, card, formArea)
 }
 
@@ -157,7 +172,56 @@ const toggleAddTag = (formArea) => {
     <input type="text" class="form-control" id="add-tag-input" name="tag" placeholder="Name of tag" required />
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-tag-button">Add</button>
     </form>`, "Add tag", true)
-    manageCards(cardId, card, formArea)
+    manageCards(cardId, card, formArea, addTag)
+}
+
+/* Functions with ajax Calls */
+
+const addStock = (event) => {
+    event.preventDefault()
+    const name = event.target.name.value, price = event.target.price.value, unitsAvailable = event.target.unitsAvailable.value
+    const onSuccess = (result) => {
+        console.log({ result }, 'has been added')
+        event.target.name.value = '', event.target.price.value = '', event.target.unitsAvailable.value = ''
+    }
+    ajaxCall('stocks', { name, price, unitsAvailable }, 'POST', onSuccess)
+}
+
+const addTag = (event) => {
+    event.preventDefault()
+    const name = event.target.tag.value
+    const onSuccess = (result) => {
+        console.log({ result }, 'has been added')
+        event.target.tag.value = ''
+    }
+    ajaxCall('tags', { name }, 'POST', onSuccess)
+}
+
+const deleteStock = (id) => {
+    const onSuccess = () => {
+        window.location.reload()
+    }
+    ajaxCall('stocks', { id }, 'DELETE', onSuccess)
+}
+const deleteTag = (id) => {
+    const onSuccess = () => {
+        window.location.reload()
+    }
+    ajaxCall('tags', { id }, 'DELETE', onSuccess)
+}
+/* Helper and wrapper functions */
+const manageCards = (cardId, card, formArea, eventListener) => {
+    const CARD = formArea.querySelector(`#${cardId}`)
+    if (CARD) {
+        formArea.removeChild(CARD.parentNode.parentNode.parentNode)
+        if (eventListener)
+            CARD.removeEventListener('submit', eventListener)
+        return
+    }
+    card.classList.add('action-card')
+    if (eventListener)
+        card.querySelector(`#${cardId}`).addEventListener('submit', eventListener)
+    formArea.appendChild(card)
 }
 
 const getDashboard = (options) => {
@@ -211,7 +275,8 @@ const options = [
     { title: `Tag stock`, content: ``, component: `tagStock` },
     { title: `Allot space`, content: ``, component: `allotSpace` },
     { title: `View all stocks`, content: ``, component: `viewAllStocks` },
-    { title: 'Add tag', content: '', component: 'addTag' }
+    { title: 'Add tag', content: '', component: 'addTag' },
+    { title: 'View all tags', content: '', component: 'viewTags' }
 ]
 const dashboard = getDashboard(options)
 root.appendChild(dashboard)
