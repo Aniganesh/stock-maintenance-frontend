@@ -1,15 +1,22 @@
 "use strict"
 
+const logout = () => {
+	sessionStorage.removeItem('token')
+	window.location.reload()
+}
 
 const getHeader = (title) => {
 	const header = createDiv();
-	header.classList.add('navbar')
-	header.classList.add('bg-theme')
+	header.classList.add('navbar', 'bg-theme', 'd-flex', 'justify-content-between')
 	const titleComp = document.createElement('div')
 	titleComp.classList.add('h4')
 	titleComp.innerText = title
 	header.appendChild(titleComp)
-	/* TODO: Get user's name and display it along with a log out button */
+	const logoutButton = document.createElement('button')
+	logoutButton.innerText = 'Logout'
+	logoutButton.classList.add('btn-theme', 'btn-theme-outline')
+	logoutButton.addEventListener('click', logout)
+	header.appendChild(logoutButton)
 	return header
 }
 
@@ -22,12 +29,17 @@ if ((!sessionStorage.getItem('token')) && (window.location.pathname.indexOf('ind
 	window.location.replace(newPath)
 }
 
-const getXHR = () => {
-	let XHR
-	if (window.XMLHttpRequest) {
-		XHR = new XMLHttpRequest();
-	} else if (window.ActiveXObject) {
-		XHR = new ActiveXObject("Microsoft.XMLHTTP");
-	}
-	return XHR
+const ajaxCall = (endPoint, data, method, onSuccess) => {
+	$.ajax({
+		url: `http://localhost:5000/${endPoint}`,
+		type: method,
+		data,
+		dataType: "json",
+		beforeSend: function (x) {
+			if (x && x.overrideMimeType) {
+				x.overrideMimeType("application/j-son;charset=UTF-8");
+			}
+		},
+		success: onSuccess
+	});
 }

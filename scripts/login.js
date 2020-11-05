@@ -24,17 +24,16 @@ document.querySelector('head').appendChild(style)
 
 const login = (event) => {
 	event.preventDefault()
-	const username = event.target.username.value
+	const name = event.target.username.value
 	const password = event.target.password.value
-	const XHR = getXHR()
-	// const requestSuccess = await 
-	console.log({ username, password })
-	if (username.toLowerCase() === 'admin' && password === 'stock12345') {
-		sessionStorage.setItem('token', Math.random())
+	const onSuccess = (result) => {
+		sessionStorage.setItem('token', result.auth_token)
 		const pathSplit = window.location.pathname.split('/')
 		const newPath = pathSplit.slice(0, pathSplit.length - 1).join('/') + '/dashboard.html'
 		window.location.href = newPath;
 	}
+	ajaxCall('users', { name, password }, 'POST', onSuccess)
+
 }
 
 const loginForm = document.querySelector('#login-form')

@@ -1,19 +1,6 @@
 "use strict"
 
-const ajaxCall = (endPoint, data, method, onSuccess) => {
-    $.ajax({
-        url: `http://localhost:5000/${endPoint}`,
-        type: method,
-        data,
-        dataType: "json",
-        beforeSend: function (x) {
-            if (x && x.overrideMimeType) {
-                x.overrideMimeType("application/j-son;charset=UTF-8");
-            }
-        },
-        success: onSuccess
-    });
-}
+
 
 const isDashItem = (item) => {
     if (item.classList.contains('dashboard-item') ||
