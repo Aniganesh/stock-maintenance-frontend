@@ -41,9 +41,9 @@ const displayForm = (event) => {
             case 'tagStock':
                 toggleTagStock(formArea)
                 break
-            case 'allotSpace':
-                toggleAllotSpace(formArea)
-                break
+            /*  case 'allotSpace':
+                 toggleAllotSpace(formArea)
+                 break */
             case 'viewAllStocks':
                 toggleViewAllStocks(formArea)
                 break
@@ -93,15 +93,34 @@ const toggleUpdateStock = (formArea) => {
     <select name="stock" class="custom-select" id="stock-to-update" required>
         <option selected disabled value="----">--Select a stock to update--</option>
     </select>
-    <input type="number" class="form-control" name="item-price" placeholder="Price of Item" required /><br />
-    <input type="number" class="form-control" name="item-units" placeholder="Number of units received" required /> <br />
+    <label for="name">New name</label>
+    <input type="text" class="form-control" name="name" placeholder="New name" id="name" required />
+    <input type="number" class="form-control" id="price-item" name="price" placeholder="Price of Item" /><br />
+    <input type="number" class="form-control" name="unitsAvailable" placeholder="Number of units received" /> <br />
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="update-stock-button">Add</button>
 </form>`, 'Update a stock item', true)
+    let allStocks = []
     const stockSelect = card.querySelector('#stock-to-update')
-    const stockPrice = card.querySelector('#item-price')
-    const stockUnits = card.querySelector('#item-units')
-    /* TODO: Get stocks from back-end and append them to stockSelect. Also populate item price and item units  */
-    manageCards(formId, card, formArea)
+    const stockName = card.querySelector("#name")
+    stockSelect.addEventListener('change', (event) => {
+        console.log({ allStocks })
+        stockName.value = allStocks.filter(stock => { return stock.id === event.target.value })[0].name
+    })
+    // const stockPrice = card.querySelector('#item-price')
+    // const stockUnits = card.querySelector('#item-units')
+    const onSuccess = (result) => {
+        const stockOptions = result.map((stock) => {
+            const stockOpt = document.createElement('option')
+            stockOpt.setAttribute('value', stock._id)
+            stockOpt.innerText = stock.name
+            allStocks.push({ id: stock._id, name: stock.name })
+            return stockOpt
+        })
+
+        stockOptions.forEach((opt) => stockSelect.appendChild(opt))
+    }
+    ajaxCall('stocks', {}, 'GET', onSuccess)
+    manageCards(formId, card, formArea, updateStock)
 }
 
 const toggleTagStock = (formArea) => {
@@ -116,10 +135,35 @@ const toggleTagStock = (formArea) => {
     
     <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="tag-stock-button">Tag</button>
 </form>`, 'Tag a stock item', true)
-    manageCards(formId, card, formArea)
+    const stockSelect = card.querySelector('#stock-to-tag')
+    const tagSelect = card.querySelector("#tag-for-stock")
+    const onStocksSuccess = (result) => {
+        const stockOptions = result.map((stock) => {
+            const stockOpt = document.createElement('option')
+            stockOpt.setAttribute('value', stock._id)
+            stockOpt.innerText = stock.name
+            return stockOpt
+        })
+
+        stockOptions.forEach((opt) => stockSelect.appendChild(opt))
+    }
+    const onTagsSuccess = (result) => {
+        const tagOptions = result.map((tag) => {
+            const tagOption = document.createElement('option')
+            tagOption.setAttribute('value', tag.name)
+            tagOption.innerText = tag.name
+
+            return tagOption
+        })
+
+        tagOptions.forEach((opt) => tagSelect.appendChild(opt))
+    }
+    ajaxCall('stocks', {}, 'GET', onStocksSuccess)
+    ajaxCall('tags', {}, 'GET', onTagsSuccess)
+    manageCards(formId, card, formArea, tagStock)
 }
 
-const toggleAllotSpace = (formArea) => {
+/* const toggleAllotSpace = (formArea) => {
     const formId = 'allot-space-form'
     const card = createCard(`<form class="form-group" id="${formId}" action="" method="">
     <select name="stock" class="custom-select" id="stock-to-allot" required>
@@ -133,9 +177,9 @@ const toggleAllotSpace = (formArea) => {
 </form>`, 'Allot space for a stock', true)
     const stockSelect = card.querySelector('#stock-to-allot')
     const spaceSelect = card.querySelector('#space-for-stock')
-    /* TODO: Get stocks from back-end and append them to stockSelect. Similarly with spaceSelect  */
-    manageCards(formId, card, formArea)
-}
+    /* TODO: Get stocks from back-end and append them to stockSelect. Similarly with spaceSelect *//*
+manageCards(formId, card, formArea)
+} */
 
 const toggleViewAllStocks = (formArea) => {
     const cardId = 'stock-list'
@@ -144,21 +188,21 @@ const toggleViewAllStocks = (formArea) => {
         res.map((stock, index) => {
             const stockDiv = div()
             stockDiv.classList.add("entity")
-            stockDiv.innerHTML = `<div>${stock.name}</div>(${stock.unitsAvailable} units) <button class="delete-icon" id="stock${index}">x</button>`
+            stockDiv.innerHTML = `<div>${stock.name}</div>(${stock.unitsAvailable} units)@Rs.${stock.price}[${stock.tag ? stock.tag : 'Untagged'}] <button class="delete-icon" id="stock${index}">x</button>`
             stockDiv.querySelector(`#stock${index}`).addEventListener('click', () => deleteStock(stock._id))
             card.querySelector(`#${cardId}`).appendChild(stockDiv)
         })
     }
     ajaxCall('stocks', {}, 'GET', onSuccess)
-    manageCards(cardId, card, formArea)
+    manageCards(cardId, card, formArea, updateStock)
 }
 
 const toggleAddTag = (formArea) => {
     const cardId = 'add-tag-form'
     const card = createCard(`<form class="form-group" id="${cardId}" action="" method=""> 
-    <input type="text" class="form-control" id="add-tag-input" name="tag" placeholder="Name of tag" required />
-    <button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-tag-button">Add</button>
-    </form>`, "Add tag", true)
+<input type="text" class="form-control" id="add-tag-input" name="tag" placeholder="Name of tag" required />
+<button type="submit" name="submit" class="btn-theme btn-theme-full p-2" id="add-tag-button">Add</button>
+</form>`, "Add tag", true)
     manageCards(cardId, card, formArea, addTag)
 }
 
@@ -195,6 +239,25 @@ const deleteTag = (id) => {
         window.location.reload()
     }
     ajaxCall('tags', { id }, 'DELETE', onSuccess)
+}
+
+const updateStock = (event) => {
+    event.preventDefault()
+    const id = event.target.stock.value, name = event.target.name.value, price = event.target.price.value, unitsAvailable = event.target.unitsAvailable.value
+    const onSuccess = () => {
+        window.location.reload()
+    }
+    // console.log({ id, name, price, unitsAvailable })
+    ajaxCall('stocks', { id, name, price, unitsAvailable }, 'PATCH', onSuccess)
+}
+
+const tagStock = (event) => {
+    event.preventDefault()
+    const stockId = event.target.stock.value, tag = event.target.tag.value
+    const onSuccess = () => {
+        window.location.reload()
+    }
+    ajaxCall('stocks', { id: stockId, tag }, 'PATCH', onSuccess)
 }
 /* Helper and wrapper functions */
 const manageCards = (cardId, card, formArea, eventListener) => {
@@ -260,7 +323,6 @@ const options = [
     { title: 'Add new stock', content: ``, component: `addStock` },
     { title: `Update stock`, content: ``, component: `updateStock` },
     { title: `Tag stock`, content: ``, component: `tagStock` },
-    { title: `Allot space`, content: ``, component: `allotSpace` },
     { title: `View all stocks`, content: ``, component: `viewAllStocks` },
     { title: 'Add tag', content: '', component: 'addTag' },
     { title: 'View all tags', content: '', component: 'viewTags' }
